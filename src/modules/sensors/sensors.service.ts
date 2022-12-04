@@ -22,6 +22,21 @@ export class SensorsService extends APIService {
         });
     }
 
+    async getMine(userId: number): Promise<SensorDTO[]> {
+        return await this.prismaHandler(async () => {
+            const rooms = await prisma.usersRooms.findMany({
+                where: { userId: userId },
+                select: { Rooms: { select: { Sensors: true } } }
+            });
+
+            return rooms
+                    .map(b => b.Rooms)
+                    .reduce((a, b) => a.concat(b), [])
+                    .map(r => r.Sensors)
+                    .reduce((a, b) => a.concat(b), [] as SensorDTO[]);
+        });
+    }
+
     async add(sensor: SensorDTO) {
         this.validate(sensor, true);
 

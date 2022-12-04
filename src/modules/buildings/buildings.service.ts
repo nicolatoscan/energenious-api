@@ -21,6 +21,17 @@ export class BuildingsService extends APIService {
         });
     }
 
+    async getMine(userId: number): Promise<BuildingDTO[]> {
+        return await this.prismaHandler(async () => {
+            const buildings = await prisma.usersBuildings.findMany({
+                where: { userId: userId },
+                select: { Buildings: true }
+            });
+
+            return buildings.map(b => b.Buildings).reduce((a, b) => a.concat(b), [] as BuildingDTO[]);
+        });
+    }
+
     async add(building: BuildingDTO) {
         this.validate(building, true);
 

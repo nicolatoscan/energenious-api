@@ -22,6 +22,17 @@ export class RoomsService extends APIService {
         });
     }
 
+    async getMine(userId: number): Promise<RoomDTO[]> {
+        return await this.prismaHandler(async () => {
+            const rooms = await prisma.usersRooms.findMany({
+                where: { userId: userId },
+                select: { Rooms: true }
+            });
+
+            return rooms.map(b => b.Rooms).reduce((a, b) => a.concat(b), [] as RoomDTO[]);
+        });
+    }
+
     async add(room: RoomDTO) {
         this.validate(room, true);
 

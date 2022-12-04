@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Request } from '@nestjs/common';
 import { RoomDTO } from 'src/types/dto';
 import { Role } from '../auth/role.enum';
 import { Roles } from '../auth/roles.decorator';
@@ -13,6 +13,12 @@ export class RoomsController {
     async getAll() {
         return await this.roomsService.getAll();
     }
+
+    @Get('mine')
+    async getMine(@Request() req) {
+        return await this.roomsService.getMine(req.user?.id);
+    }
+
 
     @Post()
     @Roles(Role.Admin)

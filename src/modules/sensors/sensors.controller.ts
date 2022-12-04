@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Request } from '@nestjs/common';
 import { SensorDTO } from 'src/types/dto';
 import { Role } from '../auth/role.enum';
 import { Roles } from '../auth/roles.decorator';
@@ -12,6 +12,11 @@ export class SensorsController {
     @Roles(Role.Admin)
     async getAll() {
         return await this.sensorsService.getAll();
+    }
+
+    @Get('mine')
+    async getMine(@Request() req) {
+        return await this.sensorsService.getMine(req.user?.id);
     }
 
     @Post()
