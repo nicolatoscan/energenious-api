@@ -1,5 +1,5 @@
 export interface UserDTO {
-    id: number;
+    id?: number;
     username: string;
     password?: string;
     admin: boolean;
@@ -7,24 +7,24 @@ export interface UserDTO {
 }
 
 export interface BuildingDTO {
-    id: number;
+    id?: number;
     name: string;
 }
 
 export interface RoomDTO {
-    id: number;
+    id?: number;
     name: string;
     buildingId: number;
 }
 
 export interface SensorDTO {
-    id: number;
+    id?: number;
     name: string;
     roomId: number;
 }
 
 export interface ReadingDTO {
-    id: number;
+    id?: number;
     sensorId?: number;
     roomId?: number;
     buildingId?: number;

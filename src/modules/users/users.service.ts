@@ -16,8 +16,7 @@ export class UsersService extends APIService {
             id: Joi.number().integer().min(1),
             username: Joi.string().required().min(1).max(120),
             password: isUpdate ? Joi.string().min(8).max(120) : Joi.string().min(8).max(120).required(),
-            role: Joi.number().integer().required().valid(...roles),
-            libraryId: Joi.number().integer().min(1),
+            admin: Joi.boolean().required()
         });
         return this.validateSchema(schema, l, throwError);
     }

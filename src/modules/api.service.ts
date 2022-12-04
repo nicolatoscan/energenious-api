@@ -12,7 +12,7 @@ export class APIService {
         return errors;
     }
 
-    async prismaHandler(fn: () => any) {
+    async prismaHandler<T>(fn: () => T): Promise<T> {
         try {
             return await fn();
         } catch (e) {

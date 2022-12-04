@@ -11,6 +11,7 @@ export class SensorsService extends APIService {
         const schema = Joi.object({
             id: Joi.number().integer().min(1),
             name: Joi.string().required().min(1).max(250),
+            roomId: Joi.number().integer().required().min(1),
         });
         return this.validateSchema(schema, r, throwError);
     }

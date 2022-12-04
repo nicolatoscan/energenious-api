@@ -7,41 +7,55 @@ import { ReadingDTO } from '../../types/dto';
 @Injectable()
 export class ReadingsService extends APIService {
 
-    async getSensorReadings(userId: number, sensorId: number, from: Date, to: Date | null): Promise<ReadingDTO[]> {
-
-        // Is sensor in user room
-        const userRoom = await prisma.usersRooms.findFirst({
-            where: {
-                userId: userId,
-                Rooms: { Sensors: { some: { id: sensorId } } }
-            },
-            select: { roomId: true },
-        });
-
-        if (!userRoom) {
-            return []
-        }
-
-
+    async addReading(sensorId: number, reading: ReadingDTO) {
         return await this.prismaHandler(async () => {
-            const readings = await prisma.readings.findMany({
+            const r = await prisma.readings.create({
+                data: {
+                    value: reading.value,
+                    timestamp: reading.timestamp,
+                    readTimestamp: reading.readTimestamp,
+                    sensorId: sensorId
+                }
+            });
+            return r.id;
+        });
+    }
+
+    async getSensorReadings(userId: number, sensorId: number, from: Date, to: Date | null): Promise<ReadingDTO[]> {
+        return await this.prismaHandler(async () => {
+            const userRoom = await prisma.usersRooms.findFirst({
                 where: {
-                    sensorId: sensorId,
-                    timestamp: {
-                        gte: from,
-                        lte: to,
-                    },
+                    userId: userId,
+                    Rooms: { Sensors: { some: { id: sensorId } } }
                 },
-                select: {
-                    id: true,
-                    value: true,
-                    timestamp: true,
-                },
+                select: { roomId: true },
             });
 
-            return readings;
-        });
+            if (!userRoom) {
+                return []
+            }
 
+
+            return await this.prismaHandler(async () => {
+                const readings = await prisma.readings.findMany({
+                    where: {
+                        sensorId: sensorId,
+                        timestamp: {
+                            gte: from,
+                            lte: to,
+                        },
+                    },
+                    select: {
+                        id: true,
+                        value: true,
+                        timestamp: true,
+                    },
+                });
+
+                return readings;
+            });
+
+        });
     }
 
 
