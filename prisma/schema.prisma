@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Buildings {
+  id             Int              @id @default(autoincrement())
+  name           String           @db.VarChar(250)
+  Rooms          Rooms[]
+  UsersBuildings UsersBuildings[]
+}
+
+model Readings {
+  id            Int      @id @default(autoincrement())
+  sensorId      Int
+  value         Float
+  timestamp     DateTime @db.Timestamp(6)
+  readTimestamp DateTime @db.Timestamp(6)
+  Sensors       Sensors  @relation(fields: [sensorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Rooms {
+  id         Int          @id @default(autoincrement())
+  name       String       @db.VarChar
+  buildingId Int
+  Buildings  Buildings    @relation(fields: [buildingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Sensors    Sensors[]
+  UsersRooms UsersRooms[]
+}
+
+model Sensors {
+  id       Int        @id @default(autoincrement())
+  name     String     @db.VarChar(250)
+  roomId   Int
+  Readings Readings[]
+  Rooms    Rooms      @relation(fields: [roomId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Users {
+  id             Int              @id @default(autoincrement())
+  username       String           @db.VarChar(250)
+  password       String           @db.VarChar(250)
+  admin          Boolean
+  UsersBuildings UsersBuildings[]
+  UsersRooms     UsersRooms[]
+}
+
+model UsersBuildings {
+  userId     Int
+  buildingId Int
+  Buildings  Buildings @relation(fields: [buildingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Users      Users     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([userId, buildingId])
+}
+
+model UsersRooms {
+  userId Int
+  RoomId Int
+  Rooms  Rooms @relation(fields: [RoomId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Users  Users @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([userId, RoomId])
+}
