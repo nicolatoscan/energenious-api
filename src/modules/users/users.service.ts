@@ -110,22 +110,54 @@ export class UsersService extends APIService {
         });
     }
 
+    async addRoom(id: number, roomId: number) {
+        return await this.prismaHandler(async () => {
+            const r = await prisma.usersRooms.create({
+                data: {
+                    userId: id,
+                    roomId: roomId,
+                }
+            });
+            return [r.userId, r.roomId];
+        });
+    }
 
+    async deleteRoom(id: number, roomId: number) {
+        return await this.prismaHandler(async () => {
+            await prisma.usersRooms.delete({
+                where: {
+                    userId_roomId: {
+                        userId: id,
+                        roomId: roomId,
+                    }
+                }
+            });
+        });
+    }
 
-    // async getUsers(): Promise<User[]> {
-    //     return [
-    //         {
-    //             userId: 1,
-    //             username: 'admin',
-    //             password: await this.getPassword('admin'),
-    //             role: Role.Admin,
-    //         },
-    //         {
-    //             userId: 2,
-    //             username: 'user',
-    //             password: await this.getPassword('user'),
-    //             role: Role.User,
-    //         },
-    //     ];
-    // }
+    async addBuilding(id: number, buildingId: number) {
+        return await this.prismaHandler(async () => {
+            const r = await prisma.usersBuildings.create({
+                data: {
+                    userId: id,
+                    buildingId: buildingId,
+                }
+            });
+            return [r.userId, r.buildingId];
+        });
+    }
+
+    async deleteBuilding(id: number, buildingId: number) {
+        return await this.prismaHandler(async () => {
+            await prisma.usersBuildings.delete({
+                where: {
+                    userId_buildingId: {
+                        userId: id,
+                        buildingId: buildingId,
+                    }
+                }
+            });
+        });
+    }
+    
 }

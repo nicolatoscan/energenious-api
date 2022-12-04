@@ -60,9 +60,9 @@ model UsersBuildings {
 
 model UsersRooms {
   userId Int
-  RoomId Int
-  Rooms  Rooms @relation(fields: [RoomId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  roomId Int
+  Rooms  Rooms @relation(fields: [roomId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "UsersRooms_RoomId_fkey")
   Users  Users @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([userId, RoomId])
+  @@id([userId, roomId])
 }

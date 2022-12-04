@@ -1,4 +1,6 @@
 import { Body, Controller, Delete, ForbiddenException, Get, Param, Patch, Post, Request } from '@nestjs/common';
+import { Role } from '../auth/role.enum';
+import { Roles } from '../auth/roles.decorator';
 import { UserDTO } from 'src/types/dto';
 import { UsersService } from './users.service';
 
@@ -56,7 +58,28 @@ export class UsersController {
         return await this.usersService.delete(+id);
     }
 
+    @Post('room/:id')
+    @Roles(Role.Admin)
+    async addRoom(@Param('id') id: string, @Body() room: { roomId: number }) {
+        return await this.usersService.addRoom(+id, room.roomId);
+    }
 
+    @Delete('room/:id')
+    @Roles(Role.Admin)
+    async deleteRoom(@Param('id') id: string, @Body() room: { roomId: number }) {
+        return await this.usersService.deleteRoom(+id, room.roomId);
+    }
 
+    @Post('building/:id')
+    @Roles(Role.Admin)
+    async addBuilding(@Param('id') id: string, @Body() building: { buildingId: number }) {
+        return await this.usersService.addBuilding(+id, building.buildingId);
+    }
+
+    @Delete('building/:id')
+    @Roles(Role.Admin)
+    async deleteBuilding(@Param('id') id: string, @Body() building: { buildingId: number }) {
+        return await this.usersService.deleteBuilding(+id, building.buildingId);
+    }
 
 }
