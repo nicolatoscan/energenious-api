@@ -29,7 +29,6 @@ export class UsersService extends APIService {
 
     getRoles(): { [id: string]: number } {
         return {
-            'Commitente':  Role.Commitente,
             'User':  Role.User,
             'Admin':  Role.Admin,
         };
