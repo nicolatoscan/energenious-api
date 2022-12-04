@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Request } from '@nestjs/common';
+import { TimeRangeDTO } from 'src/types/dto';
 import { Role } from '../auth/role.enum';
 import { Roles } from '../auth/roles.decorator';
 import { ReadingsService } from './readings.service';
@@ -7,28 +8,18 @@ import { ReadingsService } from './readings.service';
 export class ReadingsController {
     constructor(private readingsService: ReadingsService) { }
 
-    @Get('roomId/:roomId')
-    async getRoomReadings(@Param('roomId') roomId: number) {
-        return await this.readingsService.getRoomReadings(roomId);
+    @Post('sensor/:id')
+    async getSensorReadings(@Request() req, @Param('id') id: string, @Body() timeRange: TimeRangeDTO) {
+        return await this.readingsService.getSensorReadings(req.user?.id, parseInt(id), timeRange.from, timeRange.to);
     }
 
-    @Post()
-    @Roles(Role.Admin)
-    async add(@Body() readings: ReadingsDTO) {
-        return await this.readingsService.add(readings);
-    }
-    
-    @Patch(':id')
-    @Roles(Role.Admin)
-    async patch(@Param('id') id: string, @Body() readings: ReadingsDTO) {
-        return await this.readingsService.update(+id, readings);
-    }
-    
-    @Delete(':id')
-    @Roles(Role.Admin)
-    async delete(@Param('id') id: string) {
-        return await this.readingsService.delete(+id);
+    @Post('room/:id')
+    async getRoomReadings(@Request() req, @Param('id') id: string, @Body() timeRange: TimeRangeDTO) {
+        return await this.readingsService.getRoomReadings(req.user?.id, parseInt(id), timeRange.from, timeRange.to);
     }
 
-
+    @Post('building/:id')
+    async getBuildingReadings(@Request() req, @Param('id') id: string, @Body() timeRange: TimeRangeDTO) {
+        return await this.readingsService.getBuildingReadings(req.user?.id, parseInt(id), timeRange.from, timeRange.to);
+    }
 }

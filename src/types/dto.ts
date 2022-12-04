@@ -32,3 +32,8 @@ export interface ReadingDTO {
     timestamp: Date;
     readTimestamp?: Date;
 }
+
+export interface TimeRangeDTO {
+    from: Date;
+    to: Date | null;
+}
